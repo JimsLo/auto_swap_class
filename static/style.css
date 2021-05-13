@@ -1,0 +1,157 @@
+.crazyswap {
+  border-style: solid;
+  width: 35%;
+  height: 100%;
+  margin: 5px;
+  padding: 10px 10px;
+}
+
+#crazyswapclass {
+  border-top: solid;
+  display: none;
+}
+
+* {
+  font-family: sans-serif;
+}
+
+#courseSearch {
+  display: none;
+}
+
+#setting {
+  display: none;
+  border: 1px solid black;
+  grid-template-columns: repeat(2, 1fr);
+  width: 40%;
+  position: relative;
+  top: 6%;
+  left: 59%;
+}
+
+.item {
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+.comment {
+  font-size: 3px;
+}
+
+#login {
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px;
+  /* padding-top: 45%; */
+}
+
+.loginButton {
+  padding: 3px 0px 0px 40px;
+}
+
+#loginbutton {
+  background-color: #4caf50;
+  color: white;
+  padding: 4px;
+  width: 50px;
+}
+
+#user_setting {
+  background-color: #4caf50;
+  color: white;
+  padding: 4px;
+  width: 80px;
+  position: absolute;
+  top: 2%;
+  right: 2%;
+}
+
+#swap {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+#swap2 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+#message {
+  display: inline;
+  margin-left: 10px;
+  color: red;
+  padding-left: 7%;
+}
+
+.courseNow {
+  padding: 5px;
+}
+
+.courseNew {
+  padding: 5px;
+}
+
+.courseClass {
+  padding: 5px;
+}
+
+#tempswap {
+  margin: 5px;
+}
+
+#coursecode {
+  margin: 5px;
+}
+
+#coursename {
+  margin: 5px;
+}
+
+#bigdiv {
+  margin: 5px;
+}
+
+#crazytitle {
+  margin: 5px;
+  color: red;
+  font-size: 30px;
+}
+
+#crazybutton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  margin: 0px 0px 0px 7px;
+}
+
+#startcrazy {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+}
+
+#constantshow {
+  padding: 0px 0px 5px;
+}
+
+#currentcourse {
+  display: none;
+}
+
+#showid {
+  display: flex;
+}
+
+#showmyid {
+  color: red;
+  padding: 3px 0px 0px 7px;
+}
+
+#showpw {
+  display: flex;
+}
+
+#showmypw {
+  color: red;
+  padding: 3px 0px 0px 7px;
+}

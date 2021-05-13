@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    *{
+        padding: 3px
+    }
+    #setting {
+        display: grid;
+        border: 1px solid black;
+        grid-template-columns: repeat(2, 1fr);
+        width: 40%;
+    }
+
+    .item {
+        border: 1px solid lightgray;
+        padding: 5px;
+    }
+
+    .comment{
+        font-size: 3px;
+    }
+
+    #timetable{
+        display: grid;
+        grid-template-columns: repeat(6,1fr);
+        
+    }
+
+    .daytitle{
+        border: 1px solid grey;
+    }
+</style>
+
+<body>
+    <div id="timetable">
+
+
+        <div class="daytitle">Mon</div>
+        <div class="daytitle">Tue</div>
+        <div class="daytitle">Wed</div>
+        <div class="daytitle">Thur</div>
+        <div class="daytitle">Fri</div>
+        <div class="daytitle">Sat</div>
+
+        <!-- <div class="item">介面設定
+            <div>上下<input type="radio" name="direction"></div>
+            <div>左右<input type="radio" name="direction"></div>
+        </div>
+        <div class="item">用戶設定
+            <div>最後確認頁面顯示<input type="checkbox"></div>
+        </div>
+        <div class="item">模式
+            <div>死撞模式<input type="radio" name="mode"></div>
+            <div class="comment">
+                *重覆撞入同一個班，直至撞到為止(不建議)
+            </div>
+            <div>理性模式<input type="radio" name="mode"></div>
+            <div class="comment">
+                *需要重新check
+            </div>
+        </div> -->
+    </div>
+
+</body>
+<script>
+    function load(data){
+        data.forEach(item=>{
+
+        })
+    }
+</script>
+</html>

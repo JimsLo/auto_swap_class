@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/1.3.7/store.min.js"></script>
+  <script src="../static/library.js"></script>
+
+  <head>
+    <link rel="stylesheet" href="../static/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>new platform</title>
+  </head>
+
+  <body>
+    <div id="constantshow">
+      <div id="showid">
+        你的ac:
+        <div id="showmyid"></div>
+      </div>
+      <div id="showpw">
+        你的pw:
+        <div id="showmypw"></div>
+      </div>
+    </div>
+    <div id="login">
+      <div>
+        登入
+        <div id="message"></div>
+      </div>
+      <div>
+        <span>帳號: </span>
+        <input type="text" placeholder="account" id="account" maxlength="8" />
+      </div>
+      <div>
+        <span>密碼: </span>
+        <input type="text" placeholder="password" id="password" />
+      </div>
+      <div class="loginButton">
+        <button onClick="check()" id="loginbutton">登入</button>
+      </div>
+    </div>
+    <div id="usersettingbutton">
+      <button onClick="opensetting()" id="user_setting">用戶設定</button>
+    </div>
+
+    <div id="setting">
+      <div class="item">
+        用戶設定
+        <div>
+          死撞次數:自訂(入數字)<input id="getcrazynum" type="text" value="20" />
+        </div>
+      </div>
+      <div class="item">
+        <button onClick="saveusersetting()">確認</button>
+      </div>
+    </div>
+    <div>
+      <div id="currentcourse">
+        Course Code to swap:
+        <input type="text" id="current_course_code" maxlength="8" />
+        想轉走既course code
+      </div>
+      <div id="courseSearch">
+        Course Search:
+        <input type="text" id="tempswap" maxlength="8" />想轉入既course
+        code(打完佢會自動search)
+      </div>
+    </div>
+
+    <div id="bigdiv">
+      <div id="swap">
+        <div class="item">Course Name</div>
+        <div class="item">Course Code</div>
+        <div class="item">Course Class</div>
+        <div class="item">Course Time</div>
+        <div class="item">Course Room</div>
+        <div class="item">Course Vacancy</div>
+        <div class="item">Course swap</div>
+      </div>
+      <div id="swap2"></div>
+    </div>
+
+    <div id="crazyswapclass">
+      <div id="crazytitle"></div>
+      <div id="crazydom">
+        <div class="countNumCrazy">[1]</div>
+        <div class="crazyswap">
+          <div class="courseNow">
+            <span>輸入你家下個course code: </span>
+            <input type="text" class="originalClassId" maxlength="8" />
+          </div>
+          <div class="courseNew">
+            <span>輸入你想換既course: </span>
+            <input type="text" class="newClassId" maxlength="8" />
+          </div>
+          <div class="courseClass">
+            <span>入你想讀邊個class: </span>
+            <input type="text" class="newClass" placeholder="e.g.CL06" />
+          </div>
+        </div>
+      </div>
+
+      <button id="crazybutton" onclick="addCrazy()">
+        加多個新既courseSwap
+      </button>
+      <button id="startcrazy" onclick="setTimer()">開始倒數計時調堂!!</button>
+    </div>
+  </body>
+  <script>
+    this.message = document.querySelector("#message");
+    this.crushnum = 20;
+    let crazyswapnum = document.querySelector("#getcrazynum");
+    crazyswapnum.addEventListener("keyup", (e) => {
+      this.crushnum = parseInt(crazyswapnum.value);
+    });
+
+    var account = document.querySelector("#account");
+    var password = document.querySelector("#password");
+    var setting_display = false;
+    account.addEventListener("keyup", (e) => {
+      if (account.value.length == 8) {
+        password.focus();
+      }
+    });
+    password.addEventListener("keydown", (e) => {
+      if (e.code == "Enter") {
+        check();
+      }
+    });
+
+    var swapcode = document.querySelector("#tempswap");
+
+    swapcode.addEventListener("keyup", (e) => {
+      if (swapcode.value.length == 8) {
+        let param = {
+          course_code: swapcode.value,
+        };
+        let currentcode = document.querySelector("#current_course_code").value;
+        if (currentcode.length < 8) {
+          currentcode = swapcode.value;
+        }
+        new requestData("check-class").requestToPy(param).then((res) => {
+          let alldata = res.data;
+          let swap = document.querySelector("#swap2");
+          swap.innerHTML = "";
+          htmlreturn(alldata, currentcode).then((res) => {
+            res.forEach((item) => {
+              swap.appendChild(item.name);
+              swap.appendChild(item.code);
+              swap.appendChild(item.classes);
+              swap.appendChild(item.time);
+              swap.appendChild(item.room);
+              swap.appendChild(item.vacancy);
+              swap.appendChild(item.swapcourse);
+            });
+          });
+          swap.appendChild(htmlreturn(alldata));
+        });
+      }
+    });
+
+    var currentswapcode = document.querySelector("#current_course_code");
+    currentswapcode.addEventListener("keyup", (e) => {
+      if (
+        currentswapcode.value.length == 8 ||
+        currentswapcode.value.length == 0
+      ) {
+        if (swapcode.value.length == 8) {
+          let param = {
+            course_code: swapcode.value,
+          };
+          let currentcode = document.querySelector("#current_course_code")
+            .value;
+          if (currentcode.length < 8) {
+            currentcode = swapcode.value;
+          }
+          new requestData("check-class").requestToPy(param).then((res) => {
+            let alldata = res.data;
+            let swap = document.querySelector("#swap2");
+            swap.innerHTML = "";
+            htmlreturn(alldata, currentcode).then((res) => {
+              res.forEach((item) => {
+                swap.appendChild(item.name);
+                swap.appendChild(item.code);
+                swap.appendChild(item.classes);
+                swap.appendChild(item.time);
+                swap.appendChild(item.room);
+                swap.appendChild(item.vacancy);
+                swap.appendChild(item.swapcourse);
+              });
+            });
+            swap.appendChild(htmlreturn(alldata));
+          });
+        }
+      }
+    });
+
+    init();
+
+    function init() {
+      var account = document.querySelector("#account");
+      var password = document.querySelector("#password");
+      let user = store.get("userlogin") || null;
+      if (user) {
+        account.value = user.username;
+        password.value = user.password;
+        // check();
+      }
+    }
+
+    function opensetting() {
+      let user_setting = document.querySelector("#setting");
+      if (setting_display == false) {
+        user_setting.style.display = "grid";
+        setting_display = true;
+      } else {
+        user_setting.style.display = "none";
+        setting_display = false;
+      }
+    }
+
+    function saveusersetting() {
+      let user_setting = document.querySelector("#setting");
+      user_setting.style.display = "none";
+      setting_display = false;
+      store.set("usersetting");
+    }
+
+    function check() {
+      document.getElementById("loginbutton").disabled = true;
+      document.querySelector("#loginbutton").style.color = "black";
+      let checkstate = new requestData("status");
+
+      var message = document.querySelector("#message");
+      var account = document.querySelector("#account").value;
+      var password = document.querySelector("#password").value;
+      login(account, password).then((res) => {
+        checkstate.getData().then((res) => {
+          if (res.code == 200) {
+            document.querySelector("#courseSearch").style.display = "block";
+            document.querySelector("#currentcourse").style.display = "block";
+          }
+        });
+        document.querySelector("#login").style.display = "none";
+        document.querySelector("#showmyid").innerHTML = account;
+        document.querySelector("#showmypw").innerHTML = password;
+        this.account = account;
+        this.password = password;
+        document.querySelector("#crazyswapclass").style.display = "block";
+      });
+    }
+
+    function addCrazy() {
+      let crazydom = document.querySelector("#crazydom");
+      let crazyswap = document.createElement("div");
+      crazyswap.setAttribute("class", "crazyswap");
+
+      let coursenow = document.createElement("div");
+      let coursenew = document.createElement("div");
+      let courseclass = document.createElement("div");
+
+      coursenow.setAttribute("class", "courseNow");
+      coursenew.setAttribute("class", "courseNew");
+      courseclass.setAttribute("class", "courseClass");
+
+      let coursenow_text = document.createElement("span");
+      coursenow_text.innerHTML = "輸入你家下個course code: ";
+
+      let coursenow_input = document.createElement("input");
+      coursenow_input.setAttribute("type", "text");
+      coursenow_input.setAttribute("class", "originalClassId");
+
+      coursenow.appendChild(coursenow_text);
+      coursenow.appendChild(coursenow_input);
+
+      let coursenew_text = document.createElement("span");
+      coursenew_text.innerHTML = "輸入你想換既course: ";
+
+      let coursenew_input = document.createElement("input");
+      coursenew_input.setAttribute("type", "text");
+      coursenew_input.setAttribute("class", "newClassId");
+
+      coursenew.appendChild(coursenew_text);
+      coursenew.appendChild(coursenew_input);
+
+      let courseclass_text = document.createElement("span");
+      courseclass_text.innerHTML = "入你想讀邊個class: ";
+
+      let courseclass_input = document.createElement("input");
+      courseclass_input.setAttribute("type", "text");
+      courseclass_input.setAttribute("class", "newClass");
+      courseclass_input.setAttribute("placeholder", "e.g. CL06");
+
+      courseclass.appendChild(courseclass_text);
+      courseclass.appendChild(courseclass_input);
+
+      crazyswap.appendChild(coursenow);
+      crazyswap.appendChild(coursenew);
+      crazyswap.appendChild(courseclass);
+
+      let count = document.querySelectorAll(".crazyswap").length + 1;
+
+      let countHTML = document.createElement("div");
+      countHTML.setAttribute("class", "countNumCrazy");
+      countHTML.innerHTML = "[" + count + "]";
+      crazydom.appendChild(countHTML);
+      crazydom.appendChild(crazyswap);
+      // coursenow.innerHTML
+    }
+
+    function startCrazySwap() {
+      let count = document.querySelectorAll(".courseNow").length;
+      let add_drop = new requestData("main-swap");
+      let storejson = [];
+      for (i = 0; i < count; i++) {
+        let coursenow = document.querySelectorAll(".originalClassId")[i].value;
+        let coursenew = document.querySelectorAll(".newClassId")[i].value;
+        let courseclass = document.querySelectorAll(".newClass")[i].value;
+        let json = {
+          origin_code: coursenow,
+          new_code: coursenew,
+          new_class: courseclass,
+          boost: true,
+          crush_num: this.crushnum,
+        };
+        storejson.push(json);
+      }
+      let requestjson = {
+        username: this.account,
+        password: this.password,
+        data: storejson,
+      };
+      add_drop.requestToPy(requestjson).then((res) => {
+        document.querySelector("#message").innerHTML = res.message;
+      });
+    }
+
+    function setTimer() {
+      let alltext = document.querySelectorAll("input");
+      alltext.forEach((e) => {
+        e.disabled = true;
+      });
+      document.querySelector("#tempswap").disabled = false;
+
+      var countDownDate = new Date("Jan 26, 2021 18:59:10").getTime();
+      // Update the count down every 1 second
+      var x = setInterval(function () {
+        // Get today's date and time
+        var now = new Date().getTime();
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="demo"
+        document.getElementById("crazytitle").innerHTML =
+          "距離發射仲有: " +
+          days +
+          "d " +
+          hours +
+          "h " +
+          minutes +
+          "m " +
+          seconds +
+          "s ";
+
+        // If the count down is over, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById("crazytitle").innerHTML =
+            "調堂開始! 祝幸運<3";
+          startCrazySwap();
+        }
+      }, 1000);
+    }
+  </script>
+</html>
